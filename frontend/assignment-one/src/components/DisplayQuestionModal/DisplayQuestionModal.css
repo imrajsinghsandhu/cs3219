@@ -24,6 +24,7 @@
     max-height: 700px;
     height: fit-content;
     overflow-y: auto;
+    text-align: left;
 }
 
 .modal h2 {
