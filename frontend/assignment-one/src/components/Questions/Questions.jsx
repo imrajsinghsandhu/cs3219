@@ -1,12 +1,15 @@
 import React, {useEffect, useState} from "react";
 import "./Questions.css";
 import AddQuestionModal from "../AddQuestionModal/AddQuestionModal";
+import DisplayQuestionModal from "../DisplayQuestionModal/DisplayQuestionModal";
 
 const Questions = (props) => {
     // initialise storedData with empty Array first
     const [questions, setQuestions] = useState([]);
     // State to control modal visibility
     const [isModalOpen, setIsModalOpen] = useState(false); 
+    const [isQuestionModalOpen, setIsQuestionModalOpen] = useState(false); 
+    const [selectedQuestion, setSelectedQuestion] = useState(null); 
     
     // upon mounting of Questions component, populate localStorage with the dummy data 
     useEffect(() => {
@@ -30,9 +33,19 @@ const Questions = (props) => {
         setIsModalOpen(true);
     };
 
+    const openQuestionModal = (questionId) => {
+        setIsQuestionModalOpen(true);
+        setSelectedQuestion(questionId);
+    };
+
     // Function to close the modal
     const closeModal = () => {
         setIsModalOpen(false);
+    };
+
+    const closeQuestionModal = () => {
+        setIsQuestionModalOpen(false);
+        setSelectedQuestion(null);
     };
 
     // Function to add a new question
@@ -110,9 +123,16 @@ const Questions = (props) => {
                                 {/* Place the id number on the left */}
                                 <h3>{index + 1}</h3>
                             </div>
-                            <h3 className="question-title" onClick={()=> handleTitleClick()}>{item.Title}</h3>
+                            <h3 className="question-title" onClick={()=> openQuestionModal(item.id)}>{item.Title}</h3>
                             {/* description shown upon clicking title */}
-                            {/* <h3 className="item-description" >{item.Title}</h3> */}
+                            {selectedQuestion && (
+                                    <DisplayQuestionModal 
+                                        onClose={closeQuestionModal}
+                                        selectedQuestionId={selectedQuestion}
+                                        dummyData={questions}
+                                    /> 
+                                )
+                            }
                             <div className="question-categories">
                                 {item.Categories.map((category, index) => (
                                     <div className="question-category" key={index}>
