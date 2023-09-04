@@ -8,7 +8,6 @@ const Questions = (props) => {
     const [questions, setQuestions] = useState([]);
     // State to control modal visibility
     const [isModalOpen, setIsModalOpen] = useState(false); 
-    const [isQuestionModalOpen, setIsQuestionModalOpen] = useState(false); 
     const [selectedQuestion, setSelectedQuestion] = useState(null); 
     
     // upon mounting of Questions component, populate localStorage with the dummy data 
@@ -34,7 +33,6 @@ const Questions = (props) => {
     };
 
     const openQuestionModal = (questionId) => {
-        setIsQuestionModalOpen(true);
         setSelectedQuestion(questionId);
     };
 
@@ -44,11 +42,11 @@ const Questions = (props) => {
     };
 
     const closeQuestionModal = () => {
-        setIsQuestionModalOpen(false);
         setSelectedQuestion(null);
     };
 
     // Function to add a new question
+        // ensure no 2 questions have the same title
     const handleAddQuestion = (newQuestion) => {
         // Add the new question to your questions state
         // setQuestions([...questions, newQuestion]);// Update localStorage with the new data
@@ -59,13 +57,26 @@ const Questions = (props) => {
             ...newQuestion
         }
 
-        localStorage.setItem("questions", JSON.stringify([...questions, newQuestionWithId]));
-        const updatedQuestions = localStorage.getItem("questions");
-        setQuestions(JSON.parse(updatedQuestions));
+        let isNoError = true;
+        // check if the new question is already in the question bank
+            // by checking for same title in the database
+        questions.forEach((question) => {
+            if (question.Title === newQuestion.Title) {
+                console.error("Question already exists in database!");
+                isNoError = false;
+            } 
+        })
+
+        if (isNoError) {
+            localStorage.setItem("questions", JSON.stringify([...questions, newQuestionWithId]));
+            const updatedQuestions = localStorage.getItem("questions");
+            setQuestions(JSON.parse(updatedQuestions));
+        } else {
+            alert("Dont try be funny, this question is already in the database...")
+        }
     };
 
     const handleDeleteQuestion = (id) => {
-        console.log("delete pressed");
 
         try {
             // Get the current questions array from localStorage
@@ -84,10 +95,6 @@ const Questions = (props) => {
         } catch (error) {
             console.error(error.message);
         }
-    }
-
-    const handleTitleClick = () => {
-        console.log("Title Click");
     }
 
     const renderHeader = () => {
