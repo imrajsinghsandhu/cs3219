@@ -1,5 +1,7 @@
 import './App.css';
 import Questions from './components/Questions/Questions';
+import { BrowserRouter as Router, Routes, Route } from 'react-router-dom';
+import SignInScreen from './screens/SignInScreen/SignInScreen';
 
 const dummyData = [
     {
@@ -217,13 +219,14 @@ const dummyData = [
     }
 ];
 
-
-
 function App() {
   return (
-    <div className="App">
-      <Questions data={dummyData}/>
-    </div>
+    <Router>
+      <Routes>
+        <Route path="/sign-in" Component={SignInScreen} />
+        <Route path="/questions" element={<Questions data={dummyData} />} />
+      </Routes>
+    </Router>
   );
 }
 

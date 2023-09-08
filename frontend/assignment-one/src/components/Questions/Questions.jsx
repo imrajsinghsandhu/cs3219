@@ -102,6 +102,7 @@ const Questions = (props) => {
         return (
             // will have one button on the left for adding a question
             <div>
+            <div className="button-div">
                 <button className="button-add-question" onClick={() => openModal()}>Add a Question!</button>
                 {/* conditionally rendering modal */}
                 {isModalOpen && (
