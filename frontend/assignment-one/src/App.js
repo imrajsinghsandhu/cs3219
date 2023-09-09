@@ -237,17 +237,16 @@ function App() {
 
   return (
     <Router>
-      <Header isLoggedIn={isLoggedIn} handleUserSignIn={handleUserSignIn} handleUserSignOut={handleUserSignOut}/>
-      <Routes>
-        {
-          isLoggedIn ? (
-            <Route path="/questions" element={<Questions data={dummyData} />} />
-          ) : (
+     <div className='container'>
+        <Header isLoggedIn={isLoggedIn} handleUserSignIn={handleUserSignIn} handleUserSignOut={handleUserSignOut}/>
+        <main className='content'>
+          <Routes>
+            <Route path="/questions" element={<Questions data={dummyData} isLoggedIn={isLoggedIn} />} />
             <Route path="/sign-in" Component={SignInScreen} />
-          )
-        }
-      </Routes>
-      <Footer />
+          </Routes>
+        </main>
+        <Footer />
+      </div>
     </Router>
   );
 }

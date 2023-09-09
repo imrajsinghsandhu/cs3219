@@ -2,7 +2,7 @@
     display: flex;
     flex-direction: column;
     align-items: center;
-    position: relative;
+    flex-grow: 1;
 }
 
 .input-boxes-sign-in {

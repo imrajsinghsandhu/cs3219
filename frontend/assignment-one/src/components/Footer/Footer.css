@@ -1,22 +1,6 @@
 .footer {
-    position: absolute;
-    bottom: 0px;
-    min-height: 80px;
-    max-height: 80px;
-    display: flex;
-    flex-direction: row;
-    justify-content: center;
-    align-items: center;
-    align-content: center;
-    width: 100%;
-    background-color: rgb(254, 254, 207);
-}
-
-.footer-text {
-    color: black;
-    text-decoration: underline;
-    font-family: sans-serif;
-    font-weight: 800;
-    font-size: large;
-    font-style: italic;
+    padding: 20px;
+    text-align: center;
+    background-color: beige;
+    margin-top: auto;
 }
