@@ -1,0 +1,35 @@
+.header {
+    overflow: hidden;
+    background-color: beige;
+    padding: 20px 10px;
+}
+
+/* Style the header links */
+.header a {
+    float: left;
+    color: black;
+    text-align: center;
+    padding: 12px;
+    text-decoration: none;
+    font-size: 18px;
+    border-radius: 8px;
+}
+
+.header a.logo {
+    font-size: 25px;
+    font-weight: bold;
+}
+  
+.header a:hover {
+    background-color: #ddd;
+    color: black;
+}
+ 
+.header-right {
+    float: right;
+}
+
+.sign-in-out-button {
+    background-color: rgb(244, 233, 111);
+    border-radius: 8px;
+}

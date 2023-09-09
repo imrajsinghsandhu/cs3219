@@ -1,6 +1,5 @@
 import React, { useState } from "react";
 import "./SignInScreen.css";
-import Questions from "../../components/Questions/Questions";
 import { useNavigate } from "react-router-dom";
 
 /**
