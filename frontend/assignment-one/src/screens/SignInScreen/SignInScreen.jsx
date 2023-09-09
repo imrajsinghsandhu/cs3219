@@ -37,7 +37,7 @@ const SignInScreen = () => {
     const renderSignInScreen = () => {
        
         return (
-            <div>
+            <div className="sign-in-components">
                 <h1>Sign in page</h1>
                 <form>
                     <div className="input-boxes-sign-in">
@@ -55,7 +55,7 @@ const SignInScreen = () => {
                             value={formData.password}
                             onChange={handleChange}
                         />
-                        <button onClick={handleSignIn}>Sign in</button>
+                        <button className="sign-in-button" onClick={handleSignIn}>Sign in</button>
                     </div>
                 </form>
             </div>
