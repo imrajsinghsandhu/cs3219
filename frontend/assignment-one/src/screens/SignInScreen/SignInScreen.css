@@ -5,6 +5,10 @@
     flex-grow: 1;
 }
 
+.sign-in-components h1 {
+    font-family: monospace;
+}
+
 .input-boxes-sign-in {
     display: flex;
     flex-direction: column;
@@ -19,8 +23,5 @@
 .input-boxes-sign-in input {
     min-height: 20px;
     min-width: 100px;
-}
-
-.sign-in-button {
-    margin-top: 10px;
+    margin-bottom: 10px;
 }

@@ -5,6 +5,7 @@ import SignInScreen from './screens/SignInScreen/SignInScreen';
 import { useState } from 'react';
 import Header from './components/Header/Header';
 import Footer from './components/Footer/Footer';
+import UserProfileScreen from './screens/UserProfileScreen/UserProfileScreen';
 
 const dummyData = [
     {
@@ -243,6 +244,7 @@ function App() {
           <Routes>
             <Route path="/questions" element={<Questions data={dummyData} isLoggedIn={isLoggedIn} />} />
             <Route path="/sign-in" Component={SignInScreen} />
+            <Route path="/user-profile" Component={UserProfileScreen} />
           </Routes>
         </main>
         <Footer />

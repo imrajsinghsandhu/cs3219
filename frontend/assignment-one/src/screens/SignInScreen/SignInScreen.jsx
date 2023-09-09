@@ -55,7 +55,7 @@ const SignInScreen = () => {
                             value={formData.password}
                             onChange={handleChange}
                         />
-                        <button className="sign-in-button" onClick={handleSignIn}>Sign in</button>
+                        <button className="sign-in-out-button" onClick={handleSignIn}>Sign in</button>
                     </div>
                 </form>
             </div>
