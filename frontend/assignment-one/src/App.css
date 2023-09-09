@@ -7,3 +7,7 @@
 .content {
   flex-grow: 1;
 }
+
+* {
+  font-family: monospace;
+}

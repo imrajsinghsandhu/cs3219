@@ -1,0 +1,41 @@
+.change-email-components {
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    flex-grow: 1;
+}
+
+.input-box-change-email {
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    margin-bottom: 10px;
+}
+
+.input-box-change-email label {
+    align-self: baseline;
+    margin-top: 10px;
+}
+
+.delete-button {
+    background-color: rgb(244, 233, 111);
+    border-radius: 8px;
+    color: black;
+    font-weight: 700;
+    font-family: monospace;
+    padding:12px 20px;
+    transition: color;
+    margin: 10px 10px;
+}
+
+.delete-button:hover {
+    background-color: lightpink;
+    border-radius: 8px;
+    color: red;
+    font-weight: 700;
+    font-family: monospace;
+}
+
+.heatmap {
+    margin: 10px;
+}

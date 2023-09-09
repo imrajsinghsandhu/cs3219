@@ -5,10 +5,6 @@
     flex-grow: 1;
 }
 
-.sign-in-components h1 {
-    font-family: monospace;
-}
-
 .input-boxes-sign-in {
     display: flex;
     flex-direction: column;
