@@ -34,20 +34,10 @@ router.get('/profile', verifyToken, async (req, res) => {
  * For users to logout
  * 1. Clears the session or token on the server-side to log the user out
  */
-router.get('/logout', verifyToken, async (req, res) => {
+router.get('/logout', async (req, res) => {
     try {
-        // Perform the necessary logout actions here (e.g., clear session, invalidate token)
-        // Example: Clear the session or JWT token
-        // Redirect to the login page or send a success response
-
-        // Clear the JWT token on the client-side (e.g., remove it from cookies or local storage) on FE
-        // You can use a library like js-cookie to manage cookies
-        // For example, if you're using js-cookie for cookies:
-        // import Cookies from 'js-cookie';
-        // Cookies.remove('your-jwt-cookie-name');
-
         // Redirect the user to the login page (replace '/login' with your actual login page URL)
-        res.status(200).json({ message: 'Logged out successfully', redirect: 'http://localhost:3000/sign-in' });
+        res.status(200).json({ message: 'Logged out successfully'});
     } catch (error) {
         console.error('Error during logout:', error);
         res.status(500).json({ message: 'Logout failed' });
@@ -74,28 +64,29 @@ router.get('/logout', verifyToken, async (req, res) => {
  */
 router.put('/profile', verifyToken, async (req, res) => {
     try {
+
         const userId = req.userId;
 
         // Extract the new email from the request body
-        const { newEmail } = req.body;
+        const { email } = req.body;
 
-        if (!newEmail) {
+        if (!email) {
             res.status(500).json({ message: "Missing email field"});
         }
 
         // Validate the new email (you can add more validation here)
-        if (!isValidEmail(newEmail)) {
+        if (!isValidEmail(email)) {
             return res.status(400).json({ message: 'Invalid email format' });
         }
 
         // Check if the new email is already in use by another user (pseudo-code)
-        const isEmailInUse = await isEmailAlreadyInUse(newEmail);
+        const isEmailInUse = await isEmailAlreadyInUse(email);
         if (isEmailInUse) {
             return res.status(409).json({ message: 'Email is already in use' });
         }
 
         // Update the user's email in the database
-        await pool.query('UPDATE users SET email = $1 WHERE id = $2', [newEmail, userId]);
+        await pool.query('UPDATE users SET email = $1 WHERE id = $2', [email, userId]);
         
         // Respond with a success message
         res.status(200).json({ message: 'Email updated successfully' });
