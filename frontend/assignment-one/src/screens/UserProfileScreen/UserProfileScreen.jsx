@@ -3,6 +3,8 @@ import CalendarHeatmap from 'reactjs-calendar-heatmap'
 import moment from 'moment';
 import * as d3 from 'd3';
 import "./UserProfileScreen.css";
+import { useNavigate } from "react-router-dom";
+import { getAuthToken } from "../../utils/authUtils";
 
 /**
  * User profile screen will have 
@@ -11,7 +13,8 @@ import "./UserProfileScreen.css";
  */
 
 const UserProfileScreen = () => {
-    
+    const navigate = useNavigate();
+
     const [data, setData] = useState([]);
     const [newEmail, setNewEmail] = useState('');
 
@@ -36,16 +39,57 @@ const UserProfileScreen = () => {
                 }
               }),
               init: function () {
-                this.total = this.details.reduce(function (prev, e) {
-                  return prev + e.value
-                }, 0)
-                return this
-              }
+                  this.total = this.details.reduce(function (prev, e) {
+                      return prev + e.value
+                    }, 0)
+                    return this
+                }
             }.init()
         })
-
+        
         setData(data);
     }, []);
+    
+    const handleDeleteAccount = async () => {
+        try {
+            const response = await fetch("http://localhost:4000/api/users/delete-account", {
+                method: "DELETE",
+                headers: {
+                    'Content-Type': 'application/json',
+                    'Authorization': getAuthToken()
+                }
+            })
+
+            if (response.status === 200) {
+                localStorage.removeItem('jwt_token');
+                console.log("Token has been deleted, successfully deleted account!");
+                alert("Account deleted successfully!");
+                navigate('/sign-in');
+            }
+        } catch (error) {
+            console.error("Theres en error!", error);
+        }
+    }
+
+    const handleChangeEmail = async () => {
+        try {
+            const response = await fetch("http://localhost:4000/api/users/profile", {
+                method: "PUT",
+                body:JSON.stringify(newEmail),
+                headers: {
+                    'Content-Type': 'application/json',
+                    'Authorization': getAuthToken()
+                }
+            })
+
+            if (response.status === 200) {
+                // we have gotten the user's details
+                alert('Email updated successfully! Log-in again!');
+            }
+        } catch (error) {
+            console.error("Theres en error!", error);
+        }
+    }
 
     const renderEmailChange = () => {
         return (
@@ -60,7 +104,7 @@ const UserProfileScreen = () => {
                             value={newEmail.value}
                             onChange={e=>setNewEmail(e)}
                         />
-                        <button className="sign-in-out-button">Change Email</button>
+                        <button type="button" className="sign-in-out-button" onClick={handleChangeEmail}>Change Email</button>
                     </div>
                 </form>
             </div>
@@ -81,23 +125,9 @@ const UserProfileScreen = () => {
         )
     }
 
-    const handleDeleteAccount = () => {
-        // Example:
-        // deleteUserAccount()
-        //   .then(() => {
-        //     // Handle successful deletion, e.g., log user out and redirect
-        //   })
-        //   .catch((error) => {
-        //     // Handle error, e.g., show an error message
-        //   });
-
-        // transfer the alert up there later
-        return alert('Are you sure you want to delete your account?');
-    }
-
     const renderDeleteButton = () => {
         return <div className="sign-in-components">
-            <button onClick={handleDeleteAccount} className="delete-button">Delete Account</button>
+            <button type="button" onClick={handleDeleteAccount} className="delete-button">Delete Account</button>
         </div>
     }
 

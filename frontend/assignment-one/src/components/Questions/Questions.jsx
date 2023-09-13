@@ -2,8 +2,11 @@ import React, {useEffect, useState} from "react";
 import "./Questions.css";
 import AddQuestionModal from "../AddQuestionModal/AddQuestionModal";
 import DisplayQuestionModal from "../DisplayQuestionModal/DisplayQuestionModal";
+import { useNavigate } from "react-router-dom";
+import { getAuthToken } from "../../utils/authUtils";
 
 const Questions = (props) => {
+    const navigate = useNavigate();
     // initialise storedData with empty Array first
     const [questions, setQuestions] = useState([]);
     // State to control modal visibility
@@ -97,7 +100,28 @@ const Questions = (props) => {
         }
     }
 
-    const renderHeader = () => {
+    const handleSignOut = async () => {
+        try {
+            // API call to backend to authenticate user
+            console.log("API call to backend to authenticate user");
+            const response = await fetch("http://localhost:4000/api/users/logout", {
+                method: "GET",
+                headers: {
+                    'Content-Type': 'application/json',
+                    'Authorization': getAuthToken()
+                }
+            })
+            if (response.status === 200) {
+                localStorage.removeItem('jwt_token');
+                console.log("Token has been deleted, successfully logged out!");
+                navigate('/sign-in');
+            }
+        } catch (error) {
+            console.error("Theres en error!", error);
+        }
+    };
+
+    const renderAddQuestionButton = () => {
         
         return (
             // will have one button on the left for adding a question
@@ -112,6 +136,13 @@ const Questions = (props) => {
                 )}
             </div>
         )
+    }
+
+    const renderSignOutButton = () => {
+
+        return <div className="sign-out-button">
+            <button className="sign-in-out-button" onClick={handleSignOut}>Log Out</button>
+        </div>
     }
 
     const renderQuestions = () => {
@@ -158,7 +189,8 @@ const Questions = (props) => {
 
     return (
         <div>
-            {renderHeader()}
+            {renderAddQuestionButton()}
+            {renderSignOutButton()}
             {renderQuestions()}
         </div>
     )
