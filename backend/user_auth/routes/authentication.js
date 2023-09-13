@@ -25,7 +25,7 @@ const router = express.Router();
  */
 const verifyToken = (req, res, next) => {
     const tokenHeader = req.headers['authorization'];
-
+    
     if (!tokenHeader) {
         // if auth header is not present
         console.error('auth header not present');

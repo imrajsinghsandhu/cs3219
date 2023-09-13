@@ -2,11 +2,9 @@ import React, {useEffect, useState} from "react";
 import "./Questions.css";
 import AddQuestionModal from "../AddQuestionModal/AddQuestionModal";
 import DisplayQuestionModal from "../DisplayQuestionModal/DisplayQuestionModal";
-import { useNavigate } from "react-router-dom";
 import { getAuthToken } from "../../utils/authUtils";
 
 const Questions = (props) => {
-    const navigate = useNavigate();
     // initialise storedData with empty Array first
     const [questions, setQuestions] = useState([]);
     // State to control modal visibility
@@ -24,7 +22,6 @@ const Questions = (props) => {
                 console.error("Error parsing stored data:", error);
             }
         } else {
-            console.log("No stored data present");
             setQuestions(props.data);
             localStorage.setItem("questions", JSON.stringify(props.data));
         }
@@ -100,10 +97,13 @@ const Questions = (props) => {
         }
     }
 
+    const toggleLogin = () => {
+        props.onLoginChange(!props.isLoggedIn);
+    }
+
     const handleSignOut = async () => {
         try {
             // API call to backend to authenticate user
-            console.log("API call to backend to authenticate user");
             const response = await fetch("http://localhost:4000/api/users/logout", {
                 method: "GET",
                 headers: {
@@ -112,9 +112,8 @@ const Questions = (props) => {
                 }
             })
             if (response.status === 200) {
-                localStorage.removeItem('jwt_token');
-                console.log("Token has been deleted, successfully logged out!");
-                navigate('/sign-in');
+                await localStorage.removeItem('jwt_token');
+                toggleLogin();
             }
         } catch (error) {
             console.error("Theres en error!", error);

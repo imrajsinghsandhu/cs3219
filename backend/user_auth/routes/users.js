@@ -11,22 +11,9 @@ const router = express.Router();
  * 2. Returns their profile information
  */
 // Apply the middleware to the /api/profile route
-router.get('/profile', verifyToken, async (req, res) => {
-    try {
-        const userId = req.userId; // User ID from the verified token
-
-        // Fetch the user's profile based on their user ID
-        const user = await pool.query('SELECT email FROM users WHERE id = $1', [userId]);
-
-        if (!user.rows[0]) {
-            return res.status(404).json({ message: 'User not found' });
-        }
-
-        res.status(200).json({ user: user.rows[0] });
-    } catch (error) {
-        console.error('Error while fetching profile:', error);
-        res.status(500).json({ message: 'Profile retrieval failed' });
-    }
+router.get('/is-token-valid', verifyToken, async (req, res) => {
+    // if it comes here, then the token is valid
+    res.status(200).json({ message: 'User is valid!'});
 });
 
 // done on FE

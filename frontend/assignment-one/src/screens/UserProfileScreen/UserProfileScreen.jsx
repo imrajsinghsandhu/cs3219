@@ -26,9 +26,8 @@ const UserProfileScreen = () => {
 
             if (response.status === 200) {
                 localStorage.removeItem('jwt_token');
-                console.log("Token has been deleted, successfully deleted account!");
                 alert("Account deleted successfully!");
-                navigate('/sign-in');
+                navigate('/');
             }
         } catch (error) {
             console.error("Theres en error!", error);

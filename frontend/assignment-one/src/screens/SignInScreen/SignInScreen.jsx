@@ -1,14 +1,12 @@
 import React, { useState } from "react";
 import "./SignInScreen.css";
-import { useNavigate } from "react-router-dom";
 
 /**
  * User will not be signed in first. They will have to input their username/email & password to sign in
  * or click forgot password
  * or click sign up button
  */
-const SignInScreen = () => {
-    const navigate = useNavigate();
+const SignInScreen = (props) => {
     const [formData, setFormData] = useState({
         email: "",
         password: "",
@@ -21,11 +19,14 @@ const SignInScreen = () => {
             [name]:value, 
         })
     }
+
+    const toggleLogin = () => {
+        props.onLoginChange(!props.isLoggedIn);
+    }
     
     const handleSignIn = async () => {
         try {
             // API call to backend to authenticate user
-            console.log("API call to backend to authenticate user");
             const response = await fetch("http://localhost:4000/api/users/sign-in", {
                 method: "POST",
                 body: JSON.stringify(formData),
@@ -34,13 +35,10 @@ const SignInScreen = () => {
                 }
             })
             if (response.status === 200) {
-                console.log("DONE!");
-                navigate('/questions');
                 const data = await response.json();
-                console.log(data);
                 const jwtToken = data.token;
-                
-                localStorage.setItem('jwt_token', jwtToken);
+                await localStorage.setItem('jwt_token', jwtToken);
+                toggleLogin();
             }
         } catch (error) {
             console.error("Theres en error!", error);
