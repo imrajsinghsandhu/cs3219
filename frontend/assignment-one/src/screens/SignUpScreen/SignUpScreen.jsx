@@ -1,13 +1,8 @@
 import React, { useState } from "react";
-import "./SignInScreen.css";
+import "./SignUpScreen.css";
 import { useNavigate } from "react-router-dom";
 
-/**
- * User will not be signed in first. They will have to input their username/email & password to sign in
- * or click forgot password
- * or click sign up button
- */
-const SignInScreen = () => {
+const SignUpScreen = () => {
     const navigate = useNavigate();
     const [formData, setFormData] = useState({
         email: "",
@@ -22,37 +17,35 @@ const SignInScreen = () => {
         })
     }
     
-    const handleSignIn = async () => {
+    const handleSignUp = async () => {
         try {
-            // API call to backend to authenticate user
-            console.log("API call to backend to authenticate user");
-            const response = await fetch("http://localhost:4000/api/users/sign-in", {
+            const response = await fetch("http://localhost:4000/api/users/sign-up", {
                 method: "POST",
                 body: JSON.stringify(formData),
                 headers: {
                     'Content-Type': 'application/json'
                 }
-            })
-            if (response.status === 200) {
-                console.log("DONE!");
-                navigate('/questions');
-                const data = await response.json();
-                console.log(data);
-                const jwtToken = data.token;
-                
-                localStorage.setItem('jwt_token', jwtToken);
+            });
+            console.log(formData);
+
+            if (response.status === 201) {
+                const { message } = await response.json();
+                console.log("SIGNED UP SUCCESSFULLY");
+                console.log(message); // Handle the response data as needed
+                navigate('/sign-in');
+            } else {
+                console.error('Sign-up failed'); // Handle the error case
             }
         } catch (error) {
-            console.error("Theres en error!", error);
+            console.error('Error:', error); // Handle network or other errors
         }
     }
 
+    const renderSignUpScreen = () => {
 
-    const renderSignInScreen = () => {
-       
         return (
             <div className="sign-in-components">
-                <h1>Sign in page</h1>
+                <h1>Sign Up</h1>
                 <form>
                     <div className="input-boxes-sign-in">
                         <label>Email:</label>
@@ -69,7 +62,8 @@ const SignInScreen = () => {
                             value={formData.password}
                             onChange={handleChange}
                         />
-                        <button type="button" className="sign-in-out-button" onClick={handleSignIn}>Sign in</button>
+                        {/* When u dont put type="button", it will submit the fields, and cause a re-render of the whole component */}
+                        <button type="button" className="sign-in-out-button" onClick={handleSignUp}>Sign Up</button>
                     </div>
                 </form>
             </div>
@@ -77,8 +71,8 @@ const SignInScreen = () => {
     }
 
     return <div>
-        {renderSignInScreen()}
+        {renderSignUpScreen()}
     </div>
 }
 
-export default SignInScreen;
+export default SignUpScreen;

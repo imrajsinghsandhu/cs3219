@@ -10,10 +10,10 @@ const Header = (props) => {
 
     const handleUserSignIn = () => {
         navigate('/sign-in');
-        setSignedIn(true);
+        // setSignedIn(true);
     }
     const handleUserSignOut = () => {
-        setSignedIn(false);
+        // setSignedIn(false);
     }
 
     const handleUserIconClick = () => {

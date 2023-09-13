@@ -6,6 +6,7 @@ import { useState } from 'react';
 import Header from './components/Header/Header';
 import Footer from './components/Footer/Footer';
 import UserProfileScreen from './screens/UserProfileScreen/UserProfileScreen';
+import SignUpScreen from './screens/SignUpScreen/SignUpScreen';
 
 const dummyData = [
     {
@@ -243,8 +244,9 @@ function App() {
         <main className='content'>
           <Routes>
             <Route path="/questions" element={<Questions data={dummyData} isLoggedIn={isLoggedIn} />} />
-            <Route path="/sign-in" Component={SignInScreen} />
-            <Route path="/user-profile" Component={UserProfileScreen} />
+            <Route path="/sign-in" element={<SignInScreen/>} />
+            <Route path="/sign-up" element={<SignUpScreen/>} />
+            <Route path="/user-profile" element={<UserProfileScreen/>} />
           </Routes>
         </main>
         <Footer />

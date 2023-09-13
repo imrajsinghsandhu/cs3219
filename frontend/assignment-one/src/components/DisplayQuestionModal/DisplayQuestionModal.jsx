@@ -3,9 +3,6 @@ import "./DisplayQuestionModal.css";
 
 const DisplayQuestionModal = ({onClose, selectedQuestionId, dummyData}) => {
     
-    console.log(selectedQuestionId);
-    console.log(dummyData[selectedQuestionId - 1]);
-
     const descriptionHTML = { __html: dummyData[selectedQuestionId - 1].Description};
 
     const renderModal = () => {
