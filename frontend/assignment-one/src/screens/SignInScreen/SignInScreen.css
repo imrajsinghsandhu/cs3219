@@ -1,0 +1,23 @@
+.sign-in-components {
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    flex-grow: 1;
+}
+
+.input-boxes-sign-in {
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+}
+
+.input-boxes-sign-in label {
+    align-self: baseline;
+    margin-top: 10px;
+}
+
+.input-boxes-sign-in input {
+    min-height: 20px;
+    min-width: 100px;
+    margin-bottom: 10px;
+}

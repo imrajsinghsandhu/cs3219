@@ -1,5 +1,12 @@
 import './App.css';
 import Questions from './components/Questions/Questions';
+import { BrowserRouter as Router, Routes, Route } from 'react-router-dom';
+import SignInScreen from './screens/SignInScreen/SignInScreen';
+import { useState } from 'react';
+import Header from './components/Header/Header';
+import Footer from './components/Footer/Footer';
+import UserProfileScreen from './screens/UserProfileScreen/UserProfileScreen';
+import SignUpScreen from './screens/SignUpScreen/SignUpScreen';
 
 const dummyData = [
     {
@@ -217,13 +224,34 @@ const dummyData = [
     }
 ];
 
-
-
 function App() {
+
+  const [isLoggedIn, setIsLoggedIn] = useState(false);
+
+  const handleUserSignIn = () => {
+    // this function will check backend if the user is logged in or not
+    setIsLoggedIn(true);
+  }
+
+  const handleUserSignOut = () => {
+    setIsLoggedIn(false);
+  }
+
   return (
-    <div className="App">
-      <Questions data={dummyData}/>
-    </div>
+    <Router>
+     <div className='container'>
+        <Header isLoggedIn={isLoggedIn} handleUserSignIn={handleUserSignIn} handleUserSignOut={handleUserSignOut}/>
+        <main className='content'>
+          <Routes>
+            <Route path="/questions" element={<Questions data={dummyData} isLoggedIn={isLoggedIn} />} />
+            <Route path="/sign-in" element={<SignInScreen/>} />
+            <Route path="/sign-up" element={<SignUpScreen/>} />
+            <Route path="/user-profile" element={<UserProfileScreen/>} />
+          </Routes>
+        </main>
+        <Footer />
+      </div>
+    </Router>
   );
 }
 
