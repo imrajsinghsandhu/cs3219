@@ -4,14 +4,16 @@ const express = require('express');
 const router = express.Router();
 
 // for getting the question bank, to be loaded to the FE
-// missing auth middleware
+// missing auth middleware, needs jwt verification
 router.get('/', async (req, res) => {
     console.log("GET route hit");
     const questions = await Question.find().sort("title");
     res.send(questions);
 });
 
-// TODO: only allow admin privillege to make changes to questions
+// TODO: only allow admin to edit questions
+// might be better to use PATCH request because unlike PUT, PATCH only changes a certain field, whereas PUT
+// updates the whole object
 router.put('/:title', async (req, res) => {
     const titleToUpdate = req.params.title;
     const updatedQuestionData = req.body;
@@ -34,7 +36,7 @@ router.put('/:title', async (req, res) => {
     }
 });
 
-// for adding a new question
+// TODO: only allow admin to add new questions
 router.post('/', async (req, res) => {
     const { error } = validate(req.body);
     
@@ -56,6 +58,7 @@ router.post('/', async (req, res) => {
     res.send(question);
 });
 
+// TODO: only allow admin to delete questions
 router.delete('/:title', async (req, res) => {
     // incoming body will have the following properties
     // since every question is unique, find that question and delete it

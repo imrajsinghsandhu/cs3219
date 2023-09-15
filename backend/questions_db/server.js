@@ -2,21 +2,24 @@ const express = require('express');
 const cors = require('cors');
 const app = express();
 const mongoose = require('mongoose');
-const questions = require('./routes/questions');
+require('dotenv').config();
 
-const port = process.env.PORT || 5000;
+const PORT = process.env.PORT || 5000;
 
 app.use(cors());
-mongoose.connect("mongodb://127.0.0.1:27017/question_bank");
+mongoose.connect(process.env.DATABASE_URL);
 
 const db = mongoose.connection;
 
 db.on('error', error => console.error(error));
 db.once('open', () => console.log('Connected to db'));
 
+// let our routes accept JSON body
 app.use(express.json());
-app.use('/api/questions/', questions)
 
-app.listen(port, () => {
-    console.log('listening on port 5000');
+const questionsRouter = require('./routes/questions');
+app.use('/api/questions/', questionsRouter)
+
+app.listen(PORT, () => {
+    console.log(`listening on port ${PORT}`);
 })
