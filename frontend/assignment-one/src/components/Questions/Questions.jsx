@@ -2,6 +2,7 @@ import React, {useEffect, useState} from "react";
 import "./Questions.css";
 import AddQuestionModal from "../AddQuestionModal/AddQuestionModal";
 import DisplayQuestionModal from "../DisplayQuestionModal/DisplayQuestionModal";
+import { getAuthToken } from "../../utils/authUtils";
 
 const Questions = (props) => {
     // initialise storedData with empty Array first
@@ -21,7 +22,6 @@ const Questions = (props) => {
                 console.error("Error parsing stored data:", error);
             }
         } else {
-            console.log("No stored data present");
             setQuestions(props.data);
             localStorage.setItem("questions", JSON.stringify(props.data));
         }
@@ -97,7 +97,30 @@ const Questions = (props) => {
         }
     }
 
-    const renderHeader = () => {
+    const toggleLogin = () => {
+        props.onLoginChange(!props.isLoggedIn);
+    }
+
+    const handleSignOut = async () => {
+        try {
+            // API call to backend to authenticate user
+            const response = await fetch("http://localhost:4000/api/users/logout", {
+                method: "GET",
+                headers: {
+                    'Content-Type': 'application/json',
+                    'Authorization': getAuthToken()
+                }
+            })
+            if (response.status === 200) {
+                await localStorage.removeItem('jwt_token');
+                toggleLogin();
+            }
+        } catch (error) {
+            console.error("Theres en error!", error);
+        }
+    };
+
+    const renderAddQuestionButton = () => {
         
         return (
             // will have one button on the left for adding a question
@@ -112,6 +135,13 @@ const Questions = (props) => {
                 )}
             </div>
         )
+    }
+
+    const renderSignOutButton = () => {
+
+        return <div className="sign-out-button">
+            <button className="sign-in-out-button" onClick={handleSignOut}>Log Out</button>
+        </div>
     }
 
     const renderQuestions = () => {
@@ -158,7 +188,8 @@ const Questions = (props) => {
 
     return (
         <div>
-            {renderHeader()}
+            {renderAddQuestionButton()}
+            {renderSignOutButton()}
             {renderQuestions()}
         </div>
     )

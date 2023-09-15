@@ -1,12 +1,12 @@
 import './App.css';
 import Questions from './components/Questions/Questions';
-import { BrowserRouter as Router, Routes, Route } from 'react-router-dom';
+import { BrowserRouter as Router, Routes, Route, Navigate } from 'react-router-dom';
 import SignInScreen from './screens/SignInScreen/SignInScreen';
-import { useState } from 'react';
 import Header from './components/Header/Header';
 import Footer from './components/Footer/Footer';
 import UserProfileScreen from './screens/UserProfileScreen/UserProfileScreen';
 import SignUpScreen from './screens/SignUpScreen/SignUpScreen';
+import { useState } from 'react';
 
 const dummyData = [
     {
@@ -228,25 +228,42 @@ function App() {
 
   const [isLoggedIn, setIsLoggedIn] = useState(false);
 
-  const handleUserSignIn = () => {
-    // this function will check backend if the user is logged in or not
-    setIsLoggedIn(true);
-  }
-
-  const handleUserSignOut = () => {
-    setIsLoggedIn(false);
+  const handleLoginChange = (newState) => {
+    setIsLoggedIn(newState);
   }
 
   return (
     <Router>
      <div className='container'>
-        <Header isLoggedIn={isLoggedIn} handleUserSignIn={handleUserSignIn} handleUserSignOut={handleUserSignOut}/>
+        <Header isLoggedIn={isLoggedIn}/>
         <main className='content'>
           <Routes>
-            <Route path="/questions" element={<Questions data={dummyData} isLoggedIn={isLoggedIn} />} />
-            <Route path="/sign-in" element={<SignInScreen/>} />
-            <Route path="/sign-up" element={<SignUpScreen/>} />
-            <Route path="/user-profile" element={<UserProfileScreen/>} />
+            <Route path="/" element={
+              isLoggedIn 
+              ? <Navigate to="/questions"/> 
+              : <SignInScreen isLoggedIn={isLoggedIn} onLoginChange={handleLoginChange}/>
+            }/>
+            <Route path="/questions" element={
+              isLoggedIn
+              ? <Questions isLoggedIn={isLoggedIn} onLoginChange={handleLoginChange} data={dummyData}/> 
+              : <Navigate to="/"/>
+            }/>
+            <Route path="/sign-up" element={
+              isLoggedIn
+              ? <Navigate to="/"/>
+              : <SignUpScreen/>
+            }/>
+            <Route path="/user-profile" element={
+              isLoggedIn
+              ? <UserProfileScreen/>
+              : <Navigate to="/"/>
+            }/>
+            {/* Add catch for all undefined routes */}
+            <Route path="*" element={
+              isLoggedIn
+              ? <Navigate to="/questions" />
+              : <Navigate to="/"/>
+            }/>
           </Routes>
         </main>
         <Footer />
