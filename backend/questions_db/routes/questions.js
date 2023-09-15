@@ -21,6 +21,7 @@ router.post('/', async (req, res) => {
     let question = new Question({
         title: req.body.title,
         description: req.body.description,
+        difficulty: req.body.difficulty,
         categories: req.body.categories,
         question_link: req.body.question_link,
         solution_link: req.body.solution_link  
