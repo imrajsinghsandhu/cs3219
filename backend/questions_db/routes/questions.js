@@ -6,12 +6,14 @@ const router = express.Router();
 // for getting the question bank, to be loaded to the FE
 // missing auth middleware
 router.get('/', async (req, res) => {
+    console.log("GET route hit");
     const questions = await Question.find().sort("title");
     res.send(questions);
 });
 
 // for adding a new question
 router.post('/', async (req, res) => {
+    console.log("body: ", req.body);
     const { error } = validate(req.body);
     
     if (error) {
@@ -31,3 +33,5 @@ router.post('/', async (req, res) => {
 
     res.send(question);
 });
+
+module.exports = router

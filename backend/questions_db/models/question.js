@@ -27,7 +27,7 @@ const question = new mongoose.model('Question', new mongoose.Schema({
     categories : {
         type: Array,
         required:true,
-        minlength:5,
+        minlength:1,
         maxlength:200
     },
     question_link: {
@@ -49,7 +49,7 @@ const validateQuestion = (question) => {
         title:Joi.string().min(5).max(500).required(),
         difficulty: Joi.string().min(1).max(20).required(),
         description:Joi.string().min(50).max(3000).required(),
-        categories:Joi.array().min(5).max(200).required(),
+        categories:Joi.array().min(1).max(200).required(),
         question_link:Joi.string().min(10).max(200).required(),
         solution_link:Joi.string().min(10).max(200).required(),
     });
