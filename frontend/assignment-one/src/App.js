@@ -1,5 +1,6 @@
 import './App.css';
 import Questions from './components/Questions/Questions';
+import QuestionsScreen from './screens/QuestionsScreen/QuestionsScreen';
 import { BrowserRouter as Router, Routes, Route, Navigate } from 'react-router-dom';
 import SignInScreen from './screens/SignInScreen/SignInScreen';
 import Header from './components/Header/Header';
@@ -245,7 +246,7 @@ function App() {
             }/>
             <Route path="/questions" element={
               isLoggedIn
-              ? <Questions isLoggedIn={isLoggedIn} onLoginChange={handleLoginChange} data={dummyData}/> 
+              ? <QuestionsScreen isLoggedIn={isLoggedIn} onLoginChange={handleLoginChange} data={dummyData}/> 
               : <Navigate to="/"/>
             }/>
             <Route path="/sign-up" element={
