@@ -11,7 +11,7 @@ const router = express.Router();
  * 2. Returns their profile information
  */
 // Apply the middleware to the /api/profile route
-router.get('/is-token-valid', verifyToken, async (req, res) => {
+router.get('/is-token-valid', verifyToken, (req, res) => {
     // if it comes here, then the token is valid
     res.status(200).json({ message: 'User is valid!'});
 });
