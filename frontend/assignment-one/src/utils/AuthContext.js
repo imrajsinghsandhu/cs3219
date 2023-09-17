@@ -6,6 +6,10 @@ const AuthContext = createContext({});
 
 const AuthProvider = ({ children }) => {
     const [user, setUser] = useState(null);
+    const [isLoading, setLoading] = useState(false);
+    // Block the UI in the beginning to prevent children screen from showing first before user token validation
+    // we do that by having the loadingInitial value here, initialised to true
+    const [loadingInitial, setLoadingInitial] = useState(true);
 
     useEffect(() => {
         // Check if user is already authenticated on page load
@@ -34,13 +38,23 @@ const AuthProvider = ({ children }) => {
 
                 } catch (error) {
                     console.error("Theres en error!", error);
+                } finally {
+                    // This is what ensures the UI doesnt load the child screen before the user jwt token is 
+                    // validated. It is soooo useful, and must rmb this!
+                    setLoadingInitial(false);
                 }
             }
             handleTokenValidation();
+        } else {
+            // This is here so when the jwtToken does not exist, then the relevant children can be loaded too
+            setLoadingInitial(false);
         }
+
     }, [])
     
     const login = async (formData) => {
+        setLoading(true);
+
         // Save the token to local storage
         try {
             // API call to backend to authenticate user
@@ -61,10 +75,14 @@ const AuthProvider = ({ children }) => {
             }
         } catch (error) {
             console.error("Theres an error while not logged in!", error);
+        } finally {
+            setLoading(false);
         }
     }
     
     const logout = async () => {
+        setLoading(true);
+
         try {
             // API call to backend to authenticate user
             const response = await fetch("http://localhost:4000/api/users/logout", {
@@ -82,18 +100,22 @@ const AuthProvider = ({ children }) => {
             }
         } catch (error) {
             console.error("Theres en error!", error);
+        } finally {
+            // regardless of the promise resolution
+            setLoading(false);
         }
     };
     
     const value = {
         user, 
         login,
-        logout
+        logout,
+        isLoading
     }
-
+    
     return (
         <AuthContext.Provider value={value}>
-            {children}
+            {!loadingInitial && children}
         </AuthContext.Provider>
     );
 };

@@ -2,8 +2,11 @@ import React, {useEffect, useState} from "react";
 import "./Questions.css";
 import AddQuestionModal from "../AddQuestionModal/AddQuestionModal";
 import DisplayQuestionModal from "../DisplayQuestionModal/DisplayQuestionModal";
+import { useAuth } from "../../utils/AuthContext";
 
 const Questions = (props) => {
+
+    const { logout } = useAuth();
 
     // initialise storedData with empty Array first
     const [questions, setQuestions] = useState([]);
@@ -98,7 +101,7 @@ const Questions = (props) => {
     }
 
     const handleSignOut = async () => {
-        await props.logout();
+        await logout();
     };
 
     const renderAddQuestionButton = () => {

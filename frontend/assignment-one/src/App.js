@@ -226,7 +226,7 @@ const dummyData = [
 
 function App() {
 
-  const { user, login, logout } = useAuth();
+  const { user } = useAuth();
 
   // need to render the routes, then let the conditional values render the correct page 
   return (
@@ -240,14 +240,14 @@ function App() {
                   {
                     user 
                     ? <Navigate to="/questions"/>
-                    : <SignInScreen login={login}/>
+                    : <SignInScreen />
                   } 
               />
               <Route path="/questions" 
                 element=
                   {
                     user 
-                    ? <QuestionsScreen data={dummyData} logout={logout}/> 
+                    ? <QuestionsScreen data={dummyData}/> 
                     : <Navigate to='/'/>
                   } 
               />
