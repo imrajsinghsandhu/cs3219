@@ -1,4 +1,4 @@
-import React, {useState} from "react";
+import React from "react";
 import FeatherIcon from "feather-icons-react";
 import { useNavigate } from "react-router-dom";
 import "./Header.css";
@@ -19,7 +19,7 @@ const Header = (props) => {
             <a href="#default" className="logo">PeerPrep</a>
             <div className="header-right">
                 {
-                    props.isLoggedIn 
+                    props.isLoggedIn != undefined
                     ? (
                         <div className="header-right-components">
                             <button className="profile-button" onClick={handleUserIconClick} >

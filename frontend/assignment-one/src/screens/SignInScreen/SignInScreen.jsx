@@ -19,35 +19,13 @@ const SignInScreen = (props) => {
             [name]:value, 
         })
     }
-
-    const toggleLogin = () => {
-        props.onLoginChange(!props.isLoggedIn);
-    }
     
     const handleSignIn = async () => {
-        try {
-            // API call to backend to authenticate user
-            const response = await fetch("http://localhost:4000/api/users/sign-in", {
-                method: "POST",
-                body: JSON.stringify(formData),
-                headers: {
-                    'Content-Type': 'application/json'
-                }
-            })
-            if (response.status === 200) {
-                const data = await response.json();
-                const jwtToken = data.token;
-                await localStorage.setItem('jwt_token', jwtToken);
-                toggleLogin();
-            }
-        } catch (error) {
-            console.error("Theres en error!", error);
-        }
+        await props.login(formData);
     }
 
-
     const renderSignInScreen = () => {
-       
+        
         return (
             <div className="sign-in-components">
                 <h1>Sign in page</h1>

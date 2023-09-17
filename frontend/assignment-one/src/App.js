@@ -1,12 +1,12 @@
 import './App.css';
-import Questions from './components/Questions/Questions';
+import QuestionsScreen from './screens/QuestionsScreen/QuestionsScreen';
 import { BrowserRouter as Router, Routes, Route, Navigate } from 'react-router-dom';
 import SignInScreen from './screens/SignInScreen/SignInScreen';
 import Header from './components/Header/Header';
 import Footer from './components/Footer/Footer';
 import UserProfileScreen from './screens/UserProfileScreen/UserProfileScreen';
 import SignUpScreen from './screens/SignUpScreen/SignUpScreen';
-import { useState } from 'react';
+import { useAuth } from './utils/AuthContext';
 
 const dummyData = [
     {
@@ -226,46 +226,50 @@ const dummyData = [
 
 function App() {
 
-  const [isLoggedIn, setIsLoggedIn] = useState(false);
+  const { user, login, logout } = useAuth();
 
-  const handleLoginChange = (newState) => {
-    setIsLoggedIn(newState);
-  }
-
+  // need to render the routes, then let the conditional values render the correct page 
   return (
     <Router>
-     <div className='container'>
-        <Header isLoggedIn={isLoggedIn}/>
-        <main className='content'>
-          <Routes>
-            <Route path="/" element={
-              isLoggedIn 
-              ? <Navigate to="/questions"/> 
-              : <SignInScreen isLoggedIn={isLoggedIn} onLoginChange={handleLoginChange}/>
-            }/>
-            <Route path="/questions" element={
-              isLoggedIn
-              ? <Questions isLoggedIn={isLoggedIn} onLoginChange={handleLoginChange} data={dummyData}/> 
-              : <Navigate to="/"/>
-            }/>
-            <Route path="/sign-up" element={
-              isLoggedIn
-              ? <Navigate to="/"/>
-              : <SignUpScreen/>
-            }/>
-            <Route path="/user-profile" element={
-              isLoggedIn
-              ? <UserProfileScreen/>
-              : <Navigate to="/"/>
-            }/>
-            {/* Add catch for all undefined routes */}
-            <Route path="*" element={
-              isLoggedIn
-              ? <Navigate to="/questions" />
-              : <Navigate to="/"/>
-            }/>
-          </Routes>
-        </main>
+      <div className='container'>
+        <Header isLoggedIn={user}/>
+          <main className='content'>
+            <Routes>
+              <Route path="/" 
+                element=
+                  {
+                    user 
+                    ? <QuestionsScreen data={dummyData} logout={logout} /> 
+                    : <SignInScreen login={login}/>
+                  } 
+              />
+              <Route path="/questions" 
+                element=
+                  {
+                    user 
+                    ? <QuestionsScreen data={dummyData} logout={logout}/> 
+                    : <SignInScreen login={login}/>
+                  } 
+              />
+              <Route path="/sign-up" 
+                element=
+                  {
+                    user 
+                    ? <QuestionsScreen data={dummyData} logout={logout}/> 
+                    : <SignUpScreen/>
+                  } 
+              />
+              <Route path="/user-profile" 
+                element=
+                  {
+                    user 
+                    ? <UserProfileScreen/> 
+                    : <SignInScreen login={login}/> 
+                  } 
+              />
+              <Route path="*" element={<Navigate to="/"/> }/>
+            </Routes>
+          </main>
         <Footer />
       </div>
     </Router>

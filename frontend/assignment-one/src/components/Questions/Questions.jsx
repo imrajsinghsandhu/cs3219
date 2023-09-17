@@ -2,9 +2,9 @@ import React, {useEffect, useState} from "react";
 import "./Questions.css";
 import AddQuestionModal from "../AddQuestionModal/AddQuestionModal";
 import DisplayQuestionModal from "../DisplayQuestionModal/DisplayQuestionModal";
-import { getAuthToken } from "../../utils/authUtils";
 
 const Questions = (props) => {
+
     // initialise storedData with empty Array first
     const [questions, setQuestions] = useState([]);
     // State to control modal visibility
@@ -97,27 +97,8 @@ const Questions = (props) => {
         }
     }
 
-    const toggleLogin = () => {
-        props.onLoginChange(!props.isLoggedIn);
-    }
-
     const handleSignOut = async () => {
-        try {
-            // API call to backend to authenticate user
-            const response = await fetch("http://localhost:4000/api/users/logout", {
-                method: "GET",
-                headers: {
-                    'Content-Type': 'application/json',
-                    'Authorization': getAuthToken()
-                }
-            })
-            if (response.status === 200) {
-                await localStorage.removeItem('jwt_token');
-                toggleLogin();
-            }
-        } catch (error) {
-            console.error("Theres en error!", error);
-        }
+        await props.logout();
     };
 
     const renderAddQuestionButton = () => {
