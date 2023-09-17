@@ -70,3 +70,10 @@
     transition: 0.3s;
     background-color: rgb(167, 165, 165);
 }
+
+.sign-out-button {
+    display: flex;
+    flex-direction: row;
+    justify-content: center;
+    margin-top: 10px;
+}

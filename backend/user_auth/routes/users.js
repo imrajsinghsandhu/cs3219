@@ -11,22 +11,9 @@ const router = express.Router();
  * 2. Returns their profile information
  */
 // Apply the middleware to the /api/profile route
-router.get('/profile', verifyToken, async (req, res) => {
-    try {
-        const userId = req.userId; // User ID from the verified token
-
-        // Fetch the user's profile based on their user ID
-        const user = await pool.query('SELECT email FROM users WHERE id = $1', [userId]);
-
-        if (!user.rows[0]) {
-            return res.status(404).json({ message: 'User not found' });
-        }
-
-        res.status(200).json({ user: user.rows[0] });
-    } catch (error) {
-        console.error('Error while fetching profile:', error);
-        res.status(500).json({ message: 'Profile retrieval failed' });
-    }
+router.get('/is-token-valid', verifyToken, (req, res) => {
+    // if it comes here, then the token is valid
+    res.status(200).json({ message: 'User is valid!'});
 });
 
 // done on FE
@@ -34,20 +21,10 @@ router.get('/profile', verifyToken, async (req, res) => {
  * For users to logout
  * 1. Clears the session or token on the server-side to log the user out
  */
-router.get('/logout', verifyToken, async (req, res) => {
+router.get('/logout', async (req, res) => {
     try {
-        // Perform the necessary logout actions here (e.g., clear session, invalidate token)
-        // Example: Clear the session or JWT token
-        // Redirect to the login page or send a success response
-
-        // Clear the JWT token on the client-side (e.g., remove it from cookies or local storage) on FE
-        // You can use a library like js-cookie to manage cookies
-        // For example, if you're using js-cookie for cookies:
-        // import Cookies from 'js-cookie';
-        // Cookies.remove('your-jwt-cookie-name');
-
         // Redirect the user to the login page (replace '/login' with your actual login page URL)
-        res.status(200).json({ message: 'Logged out successfully', redirect: 'http://localhost:3000/sign-in' });
+        res.status(200).json({ message: 'Logged out successfully'});
     } catch (error) {
         console.error('Error during logout:', error);
         res.status(500).json({ message: 'Logout failed' });
@@ -72,23 +49,31 @@ router.get('/logout', verifyToken, async (req, res) => {
  * @param {Object} res - The Express.js response object
  * @returns {void}
  */
-router.put('/profile', async (req, res) => {
+router.put('/profile', verifyToken, async (req, res) => {
     try {
-        // Extract the new email from the request body
-        // do a get request on the FE first to find the user's old email address
-        const { oldEmail, newEmail} = req.body;
 
-        if (!oldEmail || !newEmail) {
+        const userId = req.userId;
+
+        // Extract the new email from the request body
+        const { email } = req.body;
+
+        if (!email) {
             res.status(500).json({ message: "Missing email field"});
         }
 
         // Validate the new email (you can add more validation here)
-        if (!isValidEmail(newEmail)) {
+        if (!isValidEmail(email)) {
             return res.status(400).json({ message: 'Invalid email format' });
         }
 
+        // Check if the new email is already in use by another user (pseudo-code)
+        const isEmailInUse = await isEmailAlreadyInUse(email);
+        if (isEmailInUse) {
+            return res.status(409).json({ message: 'Email is already in use' });
+        }
+
         // Update the user's email in the database
-        await pool.query('UPDATE users SET email = $1 WHERE email = $2', [newEmail, oldEmail]);
+        await pool.query('UPDATE users SET email = $1 WHERE id = $2', [email, userId]);
         
         // Respond with a success message
         res.status(200).json({ message: 'Email updated successfully' });
@@ -104,6 +89,18 @@ const isValidEmail = (email) => {
     // For simplicity, this example checks for a basic email format
     const emailRegex = /^[^\s@]+@[^\s@]+\.[^\s@]+$/;
     return emailRegex.test(email);
+}
+
+const isEmailAlreadyInUse = async (email) => {
+    const existingUser = await pool.query('SELECT * FROM users WHERE email = $1', [email]);
+
+    if (existingUser.rows.length > 0) {
+        console.log('Email already in use, are you sure this email is yours?');
+        return true;
+    } else {
+        // email not in use
+        return false;
+    }
 }
 
 // Tested
@@ -201,21 +198,18 @@ router.post('/sign-up', async (req, res) => {
     }
 });
 
-
 // Postman test failed, works without the verify middleware
 /**
  * 1. Validates the user's identity
  * 2. Deletes their account data from the database
  * 3. Logs them out
  */
-router.delete('/delete-account', async (req, res) => {
+router.delete('/delete-account', verifyToken, async (req, res) => {
     try {
         // Assuming you have the user's ID available in the request
         // const userId = req.userId;
         // Extract the user ID from the JWT token
-        const token = req.headers.authorization.split(' ')[1];
-        const decodedToken = jwt.verify(token, jwtSecretKey);
-        const userId = decodedToken.userId;
+        const userId = req.userId;
         
         // Delete the user's account data from the database
         await pool.query('DELETE FROM users WHERE id = $1', [userId]);
@@ -224,8 +218,7 @@ router.delete('/delete-account', async (req, res) => {
         // You can use a library like js-cookie for this
         // Example: Cookies.remove('your-jwt-cookie-name');.... this will be on your FE
 
-        // Redirect the user to the sign-in page on localhost:3000, also handled in FE
-        res.status(200).json({ message: 'Account deleted successfully', redirect:"http://localhost:3000/sign-in"});
+        res.status(200).json({ message: 'Account deleted successfully'});
     } catch (error) {
         console.error('Error during account deletion:', error);
         res.status(500).json({ message: 'Account deletion failed' });

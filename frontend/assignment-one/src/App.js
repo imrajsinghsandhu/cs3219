@@ -1,12 +1,12 @@
 import './App.css';
-import Questions from './components/Questions/Questions';
-import { BrowserRouter as Router, Routes, Route } from 'react-router-dom';
+import QuestionsScreen from './screens/QuestionsScreen/QuestionsScreen';
+import { BrowserRouter as Router, Routes, Route, Navigate } from 'react-router-dom';
 import SignInScreen from './screens/SignInScreen/SignInScreen';
-import { useState } from 'react';
 import Header from './components/Header/Header';
 import Footer from './components/Footer/Footer';
 import UserProfileScreen from './screens/UserProfileScreen/UserProfileScreen';
 import SignUpScreen from './screens/SignUpScreen/SignUpScreen';
+import { useAuth } from './utils/AuthContext';
 
 const dummyData = [
     {
@@ -226,29 +226,50 @@ const dummyData = [
 
 function App() {
 
-  const [isLoggedIn, setIsLoggedIn] = useState(false);
+  const { user } = useAuth();
 
-  const handleUserSignIn = () => {
-    // this function will check backend if the user is logged in or not
-    setIsLoggedIn(true);
-  }
-
-  const handleUserSignOut = () => {
-    setIsLoggedIn(false);
-  }
-
+  // need to render the routes, then let the conditional values render the correct page 
   return (
     <Router>
-     <div className='container'>
-        <Header isLoggedIn={isLoggedIn} handleUserSignIn={handleUserSignIn} handleUserSignOut={handleUserSignOut}/>
-        <main className='content'>
-          <Routes>
-            <Route path="/questions" element={<Questions data={dummyData} isLoggedIn={isLoggedIn} />} />
-            <Route path="/sign-in" element={<SignInScreen/>} />
-            <Route path="/sign-up" element={<SignUpScreen/>} />
-            <Route path="/user-profile" element={<UserProfileScreen/>} />
-          </Routes>
-        </main>
+      <div className='container'>
+        <Header isLoggedIn={user}/>
+          <main className='content'>
+            <Routes>
+              <Route path="/" 
+                element=
+                  {
+                    user 
+                    ? <Navigate to="/questions"/>
+                    : <SignInScreen />
+                  } 
+              />
+              <Route path="/questions" 
+                element=
+                  {
+                    user 
+                    ? <QuestionsScreen data={dummyData}/> 
+                    : <Navigate to='/'/>
+                  } 
+              />
+              <Route path="/sign-up" 
+                element=
+                  {
+                    user 
+                    ? <Navigate to="/questions"/>
+                    : <SignUpScreen/>
+                  } 
+              />
+              <Route path="/user-profile" 
+                element=
+                  {
+                    user 
+                    ? <UserProfileScreen/> 
+                    : <Navigate to="/"/> 
+                  } 
+              />
+              <Route path="*" element={<Navigate to="/"/> }/>
+            </Routes>
+          </main>
         <Footer />
       </div>
     </Router>

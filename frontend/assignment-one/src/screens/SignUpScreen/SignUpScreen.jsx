@@ -26,13 +26,11 @@ const SignUpScreen = () => {
                     'Content-Type': 'application/json'
                 }
             });
-            console.log(formData);
 
             if (response.status === 201) {
                 const { message } = await response.json();
-                console.log("SIGNED UP SUCCESSFULLY");
                 console.log(message); // Handle the response data as needed
-                navigate('/sign-in');
+                navigate('/');
             } else {
                 console.error('Sign-up failed'); // Handle the error case
             }

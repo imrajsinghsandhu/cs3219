@@ -1,18 +1,31 @@
-import React, { useState } from "react";
+import React, { useState, useEffect } from "react";
 import "./SignInScreen.css";
+import { useAuth } from "../../utils/AuthContext";
 import { useNavigate } from "react-router-dom";
+import LoadingScreen from "../LoadingScreen/LoadingScreen";
 
 /**
  * User will not be signed in first. They will have to input their username/email & password to sign in
  * or click forgot password
  * or click sign up button
- */
+ */ 
 const SignInScreen = () => {
-    const navigate = useNavigate();
+
+    const { user, login } = useAuth();
+    const navigate = useNavigate(); 
+
+    const [isLoading, setIsLoading] = useState(true); // Add isLoading state
     const [formData, setFormData] = useState({
         email: "",
         password: "",
     });
+
+    useEffect(() => {
+        if (user) {
+            navigate("/questions");
+        }
+        console.log("before rendering signinScreen");
+    }, [user, navigate])
 
     const handleChange = (input) => {
         const { name, value } = input.target;
@@ -23,33 +36,11 @@ const SignInScreen = () => {
     }
     
     const handleSignIn = async () => {
-        try {
-            // API call to backend to authenticate user
-            console.log("API call to backend to authenticate user");
-            const response = await fetch("http://localhost:4000/api/users/sign-in", {
-                method: "POST",
-                body: JSON.stringify(formData),
-                headers: {
-                    'Content-Type': 'application/json'
-                }
-            })
-            if (response.status === 200) {
-                console.log("DONE!");
-                navigate('/questions');
-                const data = await response.json();
-                console.log(data);
-                const jwtToken = data.token;
-                
-                localStorage.setItem('jwt_token', jwtToken);
-            }
-        } catch (error) {
-            console.error("Theres en error!", error);
-        }
+        await login(formData);
     }
 
-
     const renderSignInScreen = () => {
-       
+        console.log("Rendering sign in screen...");
         return (
             <div className="sign-in-components">
                 <h1>Sign in page</h1>

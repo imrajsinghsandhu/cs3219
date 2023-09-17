@@ -24,14 +24,16 @@ const router = express.Router();
  * @returns {void}
  */
 const verifyToken = (req, res, next) => {
-    const token = req.headers['authorization']; // might be "Authorization"
-
-    if (!token) {
+    const tokenHeader = req.headers['authorization'];
+    
+    if (!tokenHeader) {
         // if auth header is not present
         console.error('auth header not present');
         return res.status(401).json({ message: 'Unauthorized' });
     }
-    console.log('')
+
+    const [bearer, token] = tokenHeader.split(' ');
+
     jwt.verify(token, jwtSecretKey, (err, decoded) => {
         if (err) {
             // token is invalid
@@ -39,6 +41,7 @@ const verifyToken = (req, res, next) => {
             return res.status(401).json({ message: 'Invalid token' });
         }
 
+        // Valid token
         // Store the decoded user ID in the request object for later use
         req.userId = decoded.userId;
         next();

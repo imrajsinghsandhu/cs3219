@@ -2,8 +2,12 @@ import React, {useEffect, useState} from "react";
 import "./Questions.css";
 import AddQuestionModal from "../AddQuestionModal/AddQuestionModal";
 import DisplayQuestionModal from "../DisplayQuestionModal/DisplayQuestionModal";
+import { useAuth } from "../../utils/AuthContext";
 
 const Questions = (props) => {
+
+    const { logout } = useAuth();
+
     // initialise storedData with empty Array first
     const [questions, setQuestions] = useState([]);
     // State to control modal visibility
@@ -21,7 +25,6 @@ const Questions = (props) => {
                 console.error("Error parsing stored data:", error);
             }
         } else {
-            console.log("No stored data present");
             setQuestions(props.data);
             localStorage.setItem("questions", JSON.stringify(props.data));
         }
@@ -97,7 +100,11 @@ const Questions = (props) => {
         }
     }
 
-    const renderHeader = () => {
+    const handleSignOut = async () => {
+        await logout();
+    };
+
+    const renderAddQuestionButton = () => {
         
         return (
             // will have one button on the left for adding a question
@@ -112,6 +119,13 @@ const Questions = (props) => {
                 )}
             </div>
         )
+    }
+
+    const renderSignOutButton = () => {
+
+        return <div className="sign-out-button">
+            <button className="sign-in-out-button" onClick={handleSignOut}>Log Out</button>
+        </div>
     }
 
     const renderQuestions = () => {
@@ -158,7 +172,8 @@ const Questions = (props) => {
 
     return (
         <div>
-            {renderHeader()}
+            {renderAddQuestionButton()}
+            {renderSignOutButton()}
             {renderQuestions()}
         </div>
     )
