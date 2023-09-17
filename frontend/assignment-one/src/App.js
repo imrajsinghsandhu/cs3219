@@ -228,7 +228,6 @@ function App() {
 
   const { user } = useAuth();
 
-  // need to render the routes, then let the conditional values render the correct page 
   return (
     <Router>
       <div className='container'>

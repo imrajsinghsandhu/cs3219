@@ -13,7 +13,9 @@ const Questions = (props) => {
     // State to control modal visibility
     const [isModalOpen, setIsModalOpen] = useState(false); 
     const [selectedQuestion, setSelectedQuestion] = useState(null); 
-    
+    const [visibleQuestions, setVisibleQuestions] = useState(5);
+    const [loadMore, setLoadMore] = useState(5); // Number of questions to load when clicking "View More"
+
     // upon mounting of Questions component, populate localStorage with the dummy data 
     useEffect(() => {
         let storedData = localStorage.getItem("questions");
@@ -29,6 +31,12 @@ const Questions = (props) => {
             localStorage.setItem("questions", JSON.stringify(props.data));
         }
     }, [props.data]);
+
+    // Function to load more questions when the "View More" button is clicked
+    const loadMoreQuestions = () => {
+        console.log("button pressed to load more questions");
+        setVisibleQuestions((prevVisibleQuestions) => prevVisibleQuestions + loadMore);
+    };
 
     // Function to open the modal
     const openModal = () => {
@@ -129,10 +137,13 @@ const Questions = (props) => {
     }
 
     const renderQuestions = () => {
+        const currentVisibleQuestions = questions.slice(0, visibleQuestions);
+        const moreQuestionsToLoad = questions.slice(visibleQuestions, visibleQuestions + loadMore);
+    
         return (
             <div className="questions">
                <ol>
-                    {questions.map((item, index) => 
+                    {currentVisibleQuestions.map((item, index) => 
                             /**
                              * question box will have 3 components inside
                              * 1. the id numbering
@@ -166,6 +177,15 @@ const Questions = (props) => {
                         </li>
                     )}
                 </ol>
+                {/* Render the "View More" button here! */}
+                {
+                    moreQuestionsToLoad.length > 0 && 
+                    (
+                        <button type="button" className="view-more-button" onClick={loadMoreQuestions}>
+                            View More
+                        </button>
+                    )
+                }
             </div>
         )
     }
