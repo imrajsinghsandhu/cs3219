@@ -20,7 +20,7 @@ const SignInScreen = (props) => {
         })
     }
     
-    const handleSignIn = async (formData) => {
+    const handleSignIn = async () => {
         await props.login(formData);
     }
 

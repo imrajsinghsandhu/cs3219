@@ -4,14 +4,14 @@ import Questions from "../../components/Questions/Questions";
 
 const QuestionsScreen = (props) => {
 
-    const renderQuestions = (props) => {
+    const renderQuestions = () => {
         return (
-            <Questions props/>
+            <Questions {...props}/>
         );
     }
 
     return <div>
-        {renderQuestions(props)}
+        {renderQuestions()}
     </div>
 }
 

@@ -1,14 +1,13 @@
 // manage user's login status and JWT token
 import { createContext, useContext, useEffect, useState } from 'react';
 import { getAuthToken } from './authUtils';
+import { useNavigate } from 'react-router-dom';
 
-const AuthContext = createContext({
-
-});
+const AuthContext = createContext({});
 
 const AuthProvider = ({ children }) => {
-    const [jwtToken, setJwtToken] = useState(null);
-    
+    const [user, setUser] = useState(null);
+
     useEffect(() => {
         // Check if user is already authenticated on page load
         const jwtToken = localStorage.getItem('jwt_token');
@@ -20,18 +19,20 @@ const AuthProvider = ({ children }) => {
                 try {
                     // API call to backend to authenticate user token
                     const response = await fetch("http://localhost:4000/api/users/is-token-valid", {
-                        method: "POST",
-                        body: JSON.stringify(jwtToken),
+                        method: "GET",
                         headers: {
-                            'Content-Type': 'application/json'
+                            'Content-Type': 'application/json',
+                            'Authorization': getAuthToken()
                         }
                     })
                 
                     if (response.status === 200) {
                         console.log("Valid token!");
+                        setUser({_id: "exampleUserId"});
                     } else {
-                        console.error("JWT token is not valid!");
+                        setUser(null);
                     }
+
                 } catch (error) {
                     console.error("Theres en error!", error);
                 }
@@ -51,11 +52,13 @@ const AuthProvider = ({ children }) => {
                     'Content-Type': 'application/json'
                 }
             })
+
             if (response.status === 200) {
                 const data = await response.json();
-                const jwtToken = data.token;
-                await localStorage.setItem('jwt_token', jwtToken);
-                setJwtToken(jwtToken);
+                const user = data.token;
+                setUser({_id:"exampleUserId"});
+                await localStorage.setItem('jwt_token', user);
+                console.log("signed in successfully");
             }
         } catch (error) {
             console.error("Theres an error while not logged in!", error);
@@ -74,7 +77,7 @@ const AuthProvider = ({ children }) => {
             })
             if (response.status === 200) {
                 await localStorage.removeItem('jwt_token');
-                setJwtToken(null);
+                setUser(null);
             } else {
                 console.error('Error during logout');
             }
@@ -83,8 +86,14 @@ const AuthProvider = ({ children }) => {
         }
     };
     
+    const value = {
+        user, 
+        login,
+        logout
+    }
+
     return (
-        <AuthContext.Provider value={{ jwtToken, login, logout }}>
+        <AuthContext.Provider value={value}>
             {children}
         </AuthContext.Provider>
     );
