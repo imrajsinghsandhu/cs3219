@@ -19,7 +19,7 @@ const Header = (props) => {
             <a href="#default" className="logo">PeerPrep</a>
             <div className="header-right">
                 {
-                    props.isLoggedIn != undefined
+                    props.isLoggedIn !== null
                     ? (
                         <div className="header-right-components">
                             <button className="profile-button" onClick={handleUserIconClick} >

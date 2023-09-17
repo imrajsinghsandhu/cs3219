@@ -1,7 +1,6 @@
 // manage user's login status and JWT token
 import { createContext, useContext, useEffect, useState } from 'react';
 import { getAuthToken } from './authUtils';
-import { useNavigate } from 'react-router-dom';
 
 const AuthContext = createContext({});
 

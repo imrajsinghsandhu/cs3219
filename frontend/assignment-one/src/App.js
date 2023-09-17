@@ -239,7 +239,7 @@ function App() {
                 element=
                   {
                     user 
-                    ? <QuestionsScreen data={dummyData} logout={logout} /> 
+                    ? <Navigate to="/questions"/>
                     : <SignInScreen login={login}/>
                   } 
               />
@@ -248,14 +248,14 @@ function App() {
                   {
                     user 
                     ? <QuestionsScreen data={dummyData} logout={logout}/> 
-                    : <SignInScreen login={login}/>
+                    : <Navigate to='/'/>
                   } 
               />
               <Route path="/sign-up" 
                 element=
                   {
                     user 
-                    ? <QuestionsScreen data={dummyData} logout={logout}/> 
+                    ? <Navigate to="/questions"/>
                     : <SignUpScreen/>
                   } 
               />
@@ -264,7 +264,7 @@ function App() {
                   {
                     user 
                     ? <UserProfileScreen/> 
-                    : <SignInScreen login={login}/> 
+                    : <Navigate to="/"/> 
                   } 
               />
               <Route path="*" element={<Navigate to="/"/> }/>
